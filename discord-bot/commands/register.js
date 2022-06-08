@@ -21,11 +21,11 @@ module.exports = {
 		.setAuthor({ name: 'Lennard Dorst',  url: 'https://www.github.com/0w9/chandy' })
 		.addFields(
 			{ name: '🔑 Public Key', value: wallet_address, inline: false },
-			{ name: '🔒 Private Key', value: `Not avaiable yet.`, inline: false },
+			//{ name: '🔒 Private Key', value: ``, inline: false },
 		)
 		.setTimestamp()
 		.setFooter({ text: 'Chandy Wallet, by Lennard Dorst.' });
 
-		await interaction.reply({ embeds: [registerDone_embed], empheral: true})
+		await interaction.reply({ embeds: [registerDone_embed], ephemeral: true})
 	},
 };
