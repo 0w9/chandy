@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "deploy-commands": "node deploy-commands.js",
-    "start-bot": "node main.js"
+    "build": "node deploy-commands.mjs && node main.cjs",
+    "deploy-commands": "node deploy-commands.mjs",
+    "start-bot": "node main.cjs"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,7 @@
     "discord-api-types": "^0.33.4",
     "discord.js": "^13.8.0",
     "dotenv": "^16.0.1",
+    "mariadb": "^3.0.0",
     "node-fetch": "^3.2.5"
   }
 }

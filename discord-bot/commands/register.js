@@ -1,8 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const web3 = require("@solana/web3.js");
 const {Keypair} = require("@solana/web3.js");
-
 const { MessageEmbed } = require("discord.js");
+const mariadb  = require("mariadb");
+
+const client = require("../main.cjs");
+
+const { RegisterEmbed_secretKey, RegisterEmbed } = require("../embeds/Register")
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -14,18 +18,31 @@ module.exports = {
 		const wallet_address = new_wallet.publicKey.toString()
 		const wallet_secret = Keypair.fromSecretKey(Uint8Array.from(new_wallet.secretKey)).secretKey;
 
-		const registerDone_embed = new MessageEmbed()
-		.setColor('#0099ff')
-		.setTitle('✅ Registration')
-		.setDescription("You just have sucessfully registered a new wallet. You can find all new details below.")
-		.setAuthor({ name: 'Lennard Dorst',  url: 'https://www.github.com/0w9/chandy' })
-		.addFields(
-			{ name: '🔑 Public Key', value: wallet_address, inline: false },
-			//{ name: '🔒 Private Key', value: ``, inline: false },
-		)
-		.setTimestamp()
-		.setFooter({ text: 'Chandy Wallet, by Lennard Dorst.' });
+		const registerDone_embed = RegisterEmbed(wallet_address)
 
-		await interaction.reply({ embeds: [registerDone_embed], ephemeral: true})
+		try {		
+
+			mariadb.createPool({
+				host: '127.0.0.1', 
+				user:'root', 
+				password: '',
+				connectionLimit: 5
+			}).getConnection().then(conn => {
+
+				conn.query(`SELECT * FROM chandy.users WHERE discord_id = "${interaction.member.user.id}";`).then(res => {
+					if(res[0]) {
+						interaction.reply("You already are registered.")
+					} else {
+						if(res.affectedRows !== 0 ) {
+							conn.query(`INSERT INTO chandy.users(wallet_pubKey, wallet_secretKey, discord_id) VALUES ("${wallet_address}","${wallet_secret}","${interaction.member.user.id}");`).then(res_2 => {
+								interaction.reply({ embeds: [registerDone_embed], ephemeral: true})
+							})	
+						} else {
+							interaction.reply("Error.")
+						}
+					}
+				})
+			})
+		} catch (e) {console.log(e)}
 	},
 };

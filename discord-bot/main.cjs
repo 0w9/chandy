@@ -3,7 +3,7 @@ const { Client, Collection, Intents } = require('discord.js') ;
 const fs = require("node:fs")
 require('dotenv').config()
 
-const client = new Client({
+module.exports = client = new Client({
     intents: [Intents.FLAGS.GUILDS]
 });
 client.commands = new Collection();
