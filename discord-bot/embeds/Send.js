@@ -20,7 +20,7 @@ module.exports.SentEmbed = (reciever, sender, txhash, amount) => {
     const embed = new MessageEmbed()
         .setColor('#0099ff')
         .setTitle('✅ Sent')
-        .setDescription("Your transaction just was confirmed! \nHash: `" + sender + "`")
+        .setDescription(`Your transaction just was confirmed! \nHash: [${txhash}](https://www.solscan.io/tx/${txhash}?cluster=devnet)`)
         .addFields(
             { name: 'Reciever', value: `${reciever}`, inline: false },
             { name: 'Sender', value: `${sender}`, inline: false },
